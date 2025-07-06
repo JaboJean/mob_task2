@@ -38,18 +38,18 @@ android {
             signingConfig = signingConfigs.getByName("debug")
             
             // Optional: Enable code shrinking for release builds
-            minifyEnabled = false
+            isMinifyEnabled = false
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         
         debug {
             // Optional: Enable debugging for debug builds
-            debuggable = true
+            isDebuggable = true
         }
     }
     
     // Add this to handle any lint issues
-    lintOptions {
+    lint {
         checkReleaseBuilds = false
         abortOnError = false
     }
@@ -72,5 +72,5 @@ dependencies {
     // implementation("com.google.firebase:firebase-messaging")
     
     // Add multidex support if needed
-    implementation("androidx.multidex:multidex:2.0.1")
+    implementation("androidx.multidex:multidx:2.0.1")
 }
