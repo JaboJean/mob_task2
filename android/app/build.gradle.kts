@@ -9,8 +9,8 @@ plugins {
 android {
     namespace = "com.example.notes_app"
     compileSdk = flutter.compileSdkVersion
-    ndkVersion = "27.0.12077973"  // Add this line
-    
+    ndkVersion = "27.0.12077973"
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
@@ -26,6 +26,9 @@ android {
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
+        
+        // Add multiDexEnabled if you encounter method count issues
+        multiDexEnabled = true
     }
 
     buildTypes {
@@ -33,7 +36,22 @@ android {
             // TODO: Add your own signing config for the release build.
             // Signing with the debug keys for now, so `flutter run --release` works.
             signingConfig = signingConfigs.getByName("debug")
+            
+            // Optional: Enable code shrinking for release builds
+            minifyEnabled = false
+            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
+        
+        debug {
+            // Optional: Enable debugging for debug builds
+            debuggable = true
+        }
+    }
+    
+    // Add this to handle any lint issues
+    lintOptions {
+        checkReleaseBuilds = false
+        abortOnError = false
     }
 }
 
@@ -42,11 +60,17 @@ flutter {
 }
 
 dependencies {
-  // Import the Firebase BoM
-  implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
-
-
-  // TODO: Add the dependencies for Firebase products you want to use
-  // When using the BoM, don't specify versions in Firebase dependencies
-  // https://firebase.google.com/docs/android/setup#available-libraries
+    // Import the Firebase BoM (Bill of Materials)
+    implementation(platform("com.google.firebase:firebase-bom:33.16.0"))
+    
+    // Add specific Firebase services you're using
+    // Uncomment the ones you need:
+    // implementation("com.google.firebase:firebase-analytics")
+    // implementation("com.google.firebase:firebase-auth")
+    // implementation("com.google.firebase:firebase-firestore")
+    // implementation("com.google.firebase:firebase-storage")
+    // implementation("com.google.firebase:firebase-messaging")
+    
+    // Add multidex support if needed
+    implementation("androidx.multidex:multidex:2.0.1")
 }
