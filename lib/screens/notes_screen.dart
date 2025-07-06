@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/notes/notes_cubit.dart';
-import '../blocs/notes/notes_state.dart';
 import '../models/note_model.dart';
 
 class NotesScreen extends StatelessWidget {
@@ -40,10 +39,7 @@ class NotesScreen extends StatelessWidget {
                   trailing: IconButton(
                     icon: const Icon(Icons.delete),
                     onPressed: () {
-                      context.read<NotesCubit>().deleteNote(note.id);
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('Note deleted')),
-                      );
+                      _showDeleteConfirmation(context, note);
                     },
                   ),
                   onTap: () {
@@ -68,6 +64,32 @@ class NotesScreen extends StatelessWidget {
     );
   }
 
+  void _showDeleteConfirmation(BuildContext context, Note note) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        title: const Text('Delete Note'),
+        content: const Text('Are you sure you want to delete this note?'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              context.read<NotesCubit>().deleteNote(note.id);
+              Navigator.pop(context);
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Note deleted')),
+              );
+            },
+            child: const Text('Delete'),
+          ),
+        ],
+      ),
+    );
+  }
+
   void _showAddNoteDialog(BuildContext context) {
     final titleController = TextEditingController();
     final contentController = TextEditingController();
@@ -79,8 +101,16 @@ class NotesScreen extends StatelessWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
-            TextField(controller: contentController, decoration: const InputDecoration(labelText: 'Content')),
+            TextField(
+              controller: titleController,
+              decoration: const InputDecoration(labelText: 'Title'),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: contentController,
+              decoration: const InputDecoration(labelText: 'Content'),
+              maxLines: 3,
+            ),
           ],
         ),
         actions: [
@@ -90,6 +120,13 @@ class NotesScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
+              if (titleController.text.trim().isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please enter a title')),
+                );
+                return;
+              }
+              
               final note = Note(
                 id: '',
                 title: titleController.text.trim(),
@@ -121,8 +158,16 @@ class NotesScreen extends StatelessWidget {
         content: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            TextField(controller: titleController, decoration: const InputDecoration(labelText: 'Title')),
-            TextField(controller: contentController, decoration: const InputDecoration(labelText: 'Content')),
+            TextField(
+              controller: titleController,
+              decoration: const InputDecoration(labelText: 'Title'),
+            ),
+            const SizedBox(height: 8),
+            TextField(
+              controller: contentController,
+              decoration: const InputDecoration(labelText: 'Content'),
+              maxLines: 3,
+            ),
           ],
         ),
         actions: [
@@ -132,6 +177,13 @@ class NotesScreen extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
+              if (titleController.text.trim().isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Please enter a title')),
+                );
+                return;
+              }
+              
               final updatedNote = Note(
                 id: note.id,
                 title: titleController.text.trim(),

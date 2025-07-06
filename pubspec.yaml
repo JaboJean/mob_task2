@@ -16,6 +16,7 @@ dependencies:
   google_sign_in: ^6.1.4 
   cloud_firestore: ^4.13.1
   cupertino_icons: ^1.0.2
+  equatable: ^2.0.5 
 
 dev_dependencies:
   flutter_test:

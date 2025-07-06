@@ -1,4 +1,4 @@
-# notes_app
+# mob_task2
 
 A new Flutter project.
 
